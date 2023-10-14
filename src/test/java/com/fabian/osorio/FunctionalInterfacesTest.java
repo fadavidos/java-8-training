@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.function.*;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FunctionalInterfacesTest {
 
@@ -81,4 +83,64 @@ public class FunctionalInterfacesTest {
                 () -> assertEquals("Jean", resultOfFilter.get(0).getName())
         );
     }
+
+    // some typical functional interfaces: Consumer, Supplier, Predicate, and Function
+
+    /*
+    Consumer represents an operation that accepts an argument and performs some action without returning any result.
+    Common use cases include printing, updating, or processing data.
+     */
+    @Test
+    void consumerFunctionalInterface() {
+        Consumer<String> printName = name -> System.out.println("hello: " + name);
+        people.stream()
+                .map(Person::getName)
+                .forEach(printName);
+        assertTrue(true);
+    }
+
+    /*
+    Supplier represents a supplier of results and doesn't accept any arguments. It provides a value.
+    Common use cases include lazy initialization, generating unique identifiers, and more.
+     */
+    @Test
+    void supplierFunctionalInterface(){
+        Supplier<Integer> randomNumber = () -> new Random().nextInt(10);
+        Integer firstRandomValue = randomNumber.get();
+        Integer secondRandomValue = randomNumber.get();
+        assertNotNull(firstRandomValue);
+        assertNotNull(secondRandomValue);
+        assertTrue(firstRandomValue < 11);
+        assertTrue(secondRandomValue < 11);
+    }
+
+    /*
+    Predicate represents a boolean-valued function of one argument. It's used for making decisions, filtering, and testing conditions.
+    Common use cases include filtering collections and data validation.
+     */
+    @Test
+    void predicateFunctionalInterface(){
+        Predicate<Person> greaterThan20 = person -> person.getAge() > 20;
+        Long numberOfPeople = people.stream()
+                .filter(greaterThan20)
+                .count();
+        assertEquals(3L, numberOfPeople);
+    }
+
+    /*
+    Function represents a function that takes one argument and produces a result.
+    Common use cases include data transformation, mapping, and conversion.
+     */
+    @Test
+    void functionFunctionalInterface(){
+        //Function<Person, Integer> getAges = person -> person.getAge();
+        Function<Person, Integer> getAges = Person::getAge;
+        ToIntFunction<Integer> toInt = Integer::intValue;
+        Integer sumAges = people.stream()
+                .map(getAges)
+                .mapToInt(toInt)
+                .sum();
+        assertEquals(101, sumAges);
+    }
+
 }
