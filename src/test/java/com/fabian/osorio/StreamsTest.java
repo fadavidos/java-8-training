@@ -1,8 +1,28 @@
 package com.fabian.osorio;
 
-public class StreamsTest {
+import org.junit.jupiter.api.Test;
 
-    /*
-    sum a list of Integer, and get the result
-     */
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+
+public class StreamsTest {
+    
+    @Test
+    void sumListOfIntegers() {
+        List<Integer> list = Stream.iterate(1, n -> n + 1)
+                .limit(10)
+                .collect(Collectors.toList());
+
+        Integer total = list.stream()
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        assertEquals(55, total);
+    }
+
+
 }
