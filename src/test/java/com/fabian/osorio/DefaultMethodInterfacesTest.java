@@ -41,11 +41,35 @@ public class DefaultMethodInterfacesTest {
         }
     }
 
+    class ClassC implements InterfaceOne {
+
+        @Override
+        public String getName() {
+            return "ClassC";
+        }
+
+        @Override
+        public String getDescription() {
+            return "ClassC";
+        }
+    }
+
     @Test
-    void overrideDefaultMethod(){
-        ClassB classB = new ClassB();
+    void addADefaultMethod(){
         ClassA classA = new ClassA();
-        assertEquals("ClassB", classB.getDescription());
         assertEquals("InterfaceOne", classA.getDescription());
     }
+    @Test
+    void forceToImplementADefaultMethod(){
+        ClassB classB = new ClassB();
+        assertEquals("ClassB", classB.getDescription());
+    }
+
+    @Test
+    void overrideDefaultMethod(){
+        ClassC classC = new ClassC();
+        assertEquals("ClassC", classC.getDescription());
+    }
+
+
 }
