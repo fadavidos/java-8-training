@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class StreamsTest {
-    
+
     @Test
     void sumListOfIntegers() {
         List<Integer> list = Stream.iterate(1, n -> n + 1)
@@ -22,6 +22,18 @@ public class StreamsTest {
                 .sum();
 
         assertEquals(55, total);
+    }
+
+    @Test
+    void countListOfElements(){
+        List<Integer> list = Stream.iterate(1, n-> n +1)
+                .limit(10)
+                .collect(Collectors.toList());
+
+        Long count = list.stream().count();
+
+        assertEquals(10, count);
+
     }
 
 
