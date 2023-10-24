@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -112,6 +111,17 @@ public class FunctionalInterfacesTest {
         assertNotNull(secondRandomValue);
         assertTrue(firstRandomValue < 11);
         assertTrue(secondRandomValue < 11);
+    }
+
+    interface MySupplierThread {
+        Thread getCurrentThread();
+    }
+
+    @Test
+    void methodReferenceCouldBeAssignToAnyInterface(){
+        Supplier<Thread> s1 = Thread::currentThread; // static method to Supplier
+        MySupplierThread s2 = Thread::currentThread; // static method to my own interface
+        assertEquals(s1.get().getName(), s2.getCurrentThread().getName());
     }
 
     /*
