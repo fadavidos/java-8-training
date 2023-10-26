@@ -3,6 +3,10 @@ package com.fabian.osorio;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,6 +63,24 @@ public class StreamsTest {
                 .reduce("", String::concat);
 
         assertEquals("12345678910", concatValue);
+    }
+
+    @Test
+    void usingFilterAndMapToIntInStream(){
+        List<Integer> list = Stream.iterate(1, n -> n + 1)
+                .limit(10)
+                .collect(Collectors.toList());
+
+        Predicate<Integer> isEven = n -> n % 2 == 0;
+        ToIntFunction<Integer> duplicate = e -> e * 2;
+
+        int sum = list.stream()
+                .filter(isEven)
+                .mapToInt(duplicate)
+                .sum();
+
+        assertEquals(60, sum);
+
     }
 
 
