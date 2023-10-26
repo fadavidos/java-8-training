@@ -36,5 +36,30 @@ public class StreamsTest {
 
     }
 
+    @Test
+    void sumElementsUsingMethodReference(){
+        List<Integer> list = Stream.iterate(1, n -> n +1)
+                .limit(10)
+                .collect(Collectors.toList());
+        Integer sum = list.stream()
+                //.reduce(0, (total, element) -> Integer.sum(total, element));
+                .reduce(0, Integer::sum);
+        assertEquals(55, sum);
+
+    }
+
+    @Test
+    void concatElementsUsingMethodReference(){
+        List<Integer> list = Stream.iterate(1, n -> n + 1)
+                .limit(10)
+                .collect(Collectors.toList());
+
+        String concatValue = list.stream().map(String::valueOf)
+                //.reduce("", (concat, str) -> concat.concat(str));
+                .reduce("", String::concat);
+
+        assertEquals("12345678910", concatValue);
+    }
+
 
 }
