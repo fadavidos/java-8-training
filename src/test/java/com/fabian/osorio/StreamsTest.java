@@ -156,4 +156,62 @@ public class StreamsTest {
         assertEquals(mapPeople.get("3").getName(), "Liss");
     }
 
+    @Test
+    void groupingStream(){
+        List<Person> people = new ArrayList<>();
+        people.add(new Person("1", "Juan", 20));
+        people.add(new Person("2", "Peter", 25));
+        people.add(new Person("3", "Liss", 22));
+        people.add(new Person("4", "Conor", 28));
+        people.add(new Person("5", "Juan", 72));
+        people.add(new Person("6", "Liss", 46));
+        people.add(new Person("7", "Juan", 35));
+
+        Map<String, List<Integer>> result = people.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                //p -> p.getName(),
+                                Person::getName,
+                                Collectors.mapping(
+                                        //per -> per.getAge(),
+                                        Person::getAge,
+                                        Collectors.toList()
+                                )
+                        )
+                );
+        assertEquals(3, result.get("Juan").size());
+        assertEquals(2, result.get("Liss").size());
+    }
+
+    @Test
+    void groupingStreamComplex() {
+        List<Person> people = new ArrayList<>();
+        people.add(new Person("1", "Juan", 20, "M", 110.0));
+        people.add(new Person("2", "Peter", 25, "M", 400.0));
+        people.add(new Person("3", "Liss", 22, "F", 120.0));
+        people.add(new Person("4", "Conor", 20, "F", 100.0));
+        people.add(new Person("5", "Juan", 25, "M", 140.0));
+        people.add(new Person("6", "Liss", 22, "F", 150.0));
+        people.add(new Person("7", "Juan", 20, "M", 120.0));
+
+        // group people by their age, but within each age group, you want to further group them by their gender.
+        // Finally, you want to calculate the average salary for each group.
+
+        Map<Integer, Map<String, Double>> result = people.stream()
+                .collect(Collectors.groupingBy(
+                        Person::getAge,
+                        Collectors.groupingBy(
+                                Person::getGender,
+                                Collectors.averagingDouble(Person::getSalary)
+                        )
+                ));
+
+        assertEquals(115.0, result.get(20).get("M"));
+        assertEquals(100.0, result.get(20).get("F"));
+        assertNull(result.get(22).get("M"));
+        assertEquals(135.0, result.get(22).get("F"));
+        assertEquals(270.0, result.get(25).get("M"));
+        assertNull(result.get(25).get("F"));
+    }
+
 }
