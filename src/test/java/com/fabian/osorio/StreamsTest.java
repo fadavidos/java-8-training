@@ -79,7 +79,7 @@ public class StreamsTest {
         assertEquals(60, sum);
     }
 
-    double code(Runnable block) {
+    double executeComplexCode(Runnable block) {
         long start = System.nanoTime();
         try{
             block.run();
@@ -105,14 +105,14 @@ public class StreamsTest {
                 return element * 2;
         };
 
-        double timeSequentially = code(() ->
+        double timeSequentially = executeComplexCode(() ->
                 list.stream()
                     .filter(isEven)
                     .mapToInt(duplicateWithADelay)
                     .sum()
         );
 
-        double timeParallel = code(() ->
+        double timeParallel = executeComplexCode(() ->
                 list.parallelStream()
                     .filter(isEven)
                     .mapToInt(duplicateWithADelay)
@@ -213,5 +213,16 @@ public class StreamsTest {
         assertEquals(270.0, result.get(25).get("M"));
         assertNull(result.get(25).get("F"));
     }
+
+    @Test
+    void joiningStream(){
+        List<Integer> numbers = Arrays.asList(1,2,3,4,5);
+        String concatenated = numbers.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining("-"));
+        assertEquals("1-2-3-4-5", concatenated);
+    }
+
+
 
 }
