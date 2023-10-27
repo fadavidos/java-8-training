@@ -3,10 +3,7 @@ package com.fabian.osorio;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.function.ToIntFunction;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -80,6 +77,52 @@ public class StreamsTest {
                 .sum();
 
         assertEquals(60, sum);
+    }
+
+    double code(Runnable block) {
+        long start = System.nanoTime();
+        try{
+            block.run();
+            long end = System.nanoTime();
+            return (end -start)/1.0e9;
+        } catch (Exception ex){
+            long end = System.nanoTime();
+            System.out.println("time taken(s): " + (end -start)/1.0e9);
+        }
+        return 0D;
+    }
+
+    @Test
+    void parallelStreams(){
+        List<Integer> list = Stream.iterate(1, n -> n +1)
+                .limit(10)
+                .collect(Collectors.toList());
+
+        Predicate<Integer> isEven = n -> n % 2 == 0;
+        Consumer<Integer> delay = time -> {try {Thread.sleep(time);}catch (Exception ignored){}};
+        ToIntFunction<Integer> duplicateWithADelay = element -> {
+                delay.accept(1000);
+                return element * 2;
+        };
+
+        double timeSequentially = code(() ->
+                list.stream()
+                    .filter(isEven)
+                    .mapToInt(duplicateWithADelay)
+                    .sum()
+        );
+
+        double timeParallel = code(() ->
+                list.parallelStream()
+                    .filter(isEven)
+                    .mapToInt(duplicateWithADelay)
+                    .sum()
+        );
+
+        System.out.printf("Time for timeSequentially: %s%n", timeSequentially);
+        System.out.printf("Time for timeParallel: %s", timeParallel);
+
+        assertTrue(timeSequentially >= timeParallel);
 
     }
 
