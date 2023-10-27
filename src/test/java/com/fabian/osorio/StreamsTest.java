@@ -223,6 +223,15 @@ public class StreamsTest {
         assertEquals("1-2-3-4-5", concatenated);
     }
 
+    @Test
+    void joiningWithPrefixSuffixStream(){
+        List<Integer> numbers = Arrays.asList(1,2,3,4,5);
+        String concatenated = numbers.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining("-", "<", ">"));
+        assertEquals("<1-2-3-4-5>", concatenated);
+    }
+
 
 
 }
