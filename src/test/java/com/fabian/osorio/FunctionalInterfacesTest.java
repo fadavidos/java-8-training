@@ -25,10 +25,10 @@ public class FunctionalInterfacesTest {
     @BeforeEach
     void setUp(){
         people = new ArrayList<>();
-        people.add(new Person("Juan", 20));
-        people.add(new Person("Peter", 25));
-        people.add(new Person("Liss", 28));
-        people.add(new Person("Conor", 28));
+        people.add(new Person("1", "Juan", 20));
+        people.add(new Person("2", "Peter", 25));
+        people.add(new Person("3", "Liss", 28));
+        people.add(new Person("4", "Conor", 28));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class FunctionalInterfacesTest {
     @Test
     @DisplayName("List should be filtered with functional interfaces")
     void filterAListUsingFunctionalInterfaces() {
-        people.add(new Person("Jean", 27));
+        people.add(new Person("5", "Jean", 27));
         List<Person> resultOfFilter = filterPeople(
                 people,
                 person -> person.getAge() > 25 &&

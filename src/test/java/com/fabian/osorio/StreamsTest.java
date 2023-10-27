@@ -2,7 +2,7 @@ package com.fabian.osorio;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -123,8 +123,37 @@ public class StreamsTest {
         System.out.printf("Time for timeParallel: %s", timeParallel);
 
         assertTrue(timeSequentially >= timeParallel);
-
     }
 
+    @Test
+    void createASetFromStream(){
+        List<Integer> numbers = Arrays.asList(1,2,3,4,5);
+        Predicate<Integer> isEven = num -> num % 2 == 0;
+        Function<Integer, Double> duplicate = num -> num * 2.0;
+        Set<Double> doubleOfEven = numbers.stream()
+                .filter(isEven)
+                .map(duplicate)
+                .collect(Collectors.toSet());
+        assertEquals(new HashSet<>(Arrays.asList(8.0, 4.0)), doubleOfEven);
+    }
+
+    @Test
+    void createAMapFromStream(){
+        List<Person> people = new ArrayList<>();
+        people.add(new Person("1", "Juan", 20));
+        people.add(new Person("2", "Peter", 25));
+        people.add(new Person("3", "Liss", 28));
+        people.add(new Person("4", "Conor", 28));
+
+        Map<String, Person> mapPeople = people.stream()
+                .collect(Collectors.toMap(
+                        //p -> p.getId(), || p -> p.getAge() + "-" + p.getName()
+                        Person::getId,
+                        p -> p
+                ));
+
+        assertEquals(mapPeople.get("1").getName(), "Juan");
+        assertEquals(mapPeople.get("3").getName(), "Liss");
+    }
 
 }

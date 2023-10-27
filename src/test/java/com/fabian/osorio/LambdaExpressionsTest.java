@@ -17,10 +17,10 @@ public class LambdaExpressionsTest {
     @BeforeEach
     void setUp(){
         people = new ArrayList<>();
-        people.add(new Person("Juan", 20));
-        people.add(new Person("Peter", 25));
-        people.add(new Person("Liss", 28));
-        people.add(new Person("Conor", 28));
+        people.add(new Person("1", "Juan", 20));
+        people.add(new Person("2", "Peter", 25));
+        people.add(new Person("3", "Liss", 28));
+        people.add(new Person("4", "Conor", 28));
     }
 
     /*
