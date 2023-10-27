@@ -233,5 +233,49 @@ public class StreamsTest {
     }
 
 
+    @Test
+    void howStreamApplyIntermediaOperation(){
+        List<Integer> numbers = Arrays.asList(1,2,3,5,4,5,6,7,8,9,10);
+        Predicate<Integer> isGT3 = n -> {
+            System.out.println("isGT3 " + n);
+            return n > 3;
+        };
+
+        Predicate<Integer> isEven = n -> {
+            System.out.println("isEven " + n);
+            return n%2 == 0;
+        };
+
+        Function<Integer, Integer> doubleIt = n -> {
+            System.out.println("doubleIt " + n);
+            return n*2;
+        };
+
+        Optional<Integer> result = numbers.stream()
+                .filter(isGT3)
+                .filter(isEven)
+                .map(doubleIt)
+                .findFirst();
+
+        /*
+        Streams don't apply each filter for each value, instead they apply all the intermedia functions to each value.
+        So, for the above example we´re going to see this output:
+
+            isGT3 1
+            isGT3 2
+            isGT3 3
+            isGT3 5
+            isEven 5
+            isGT3 4
+            isEven 4
+            doubleIt 4
+
+         */
+
+        assertEquals(Optional.of(8), result);
+    }
+
+
+
 
 }
